@@ -1,0 +1,26 @@
+---
+title: Hello Mermaid
+config:
+#  theme: neutral
+  theme: base
+  themeVariables:
+    primaryColor: "#00ff00"
+    primaryTextColor: '#000'
+    primaryBorderColor: '#7C0000'
+    lineColor: '#F8B229'
+    secondaryColor: '#006100'
+    tertiaryColor: '#fff'
+---
+flowchart
+    subgraph hello
+        direction LR
+        Hello --> World
+        subgraph graph
+            direction LR
+            B --> C{Let me think}
+            C -->|One| D[Laptop]
+            C -->|Two| E[iPhone]
+            C -->|Three| F[(fa:fa-database Database)]
+            name
+        end
+    end

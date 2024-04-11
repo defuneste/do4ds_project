@@ -1,0 +1,9 @@
+.[A-Za-z_]*
+
+/.quarto/
+_book/
+_site/
+/data/
+/node_modules/
+/venv/
+
