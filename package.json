@@ -18,6 +18,7 @@
     "build": "quarto render",
     "clean": "rm -rf _site/*",
     "preview": "quarto preview",
+    "start:api": "venv/bin/python api.py",
     "render:mermaid": "mmdc -i img/input.mmd -o img/output.svg",
     "mermaid": "mmdc"
   }
