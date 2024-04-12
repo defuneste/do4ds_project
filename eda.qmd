@@ -13,32 +13,38 @@ format:
 ## Penguin Size and Mass by Sex and Species
 
 
-```{.r .cell-code}
-library(palmerpenguins)
-library(dplyr)
-library(ggplot2)
+```{r}
+#| label: Import packages and penguins data
+if (!require(dplyr) || !require(ggplot2) || !require(palmerpenguins)) {
+    install.packages(c("dplyr", "ggplot2", "palmerpenguins"))
+    library(dplyr)
+    library(ggplot2)
+    library(palmerpenguins)
+}
 
 df <- palmerpenguins::penguins
 ```
 
 
-```{.r .cell-code}
-df %>%
-  group_by(species, sex) %>%
+```{r}
+#| label: Summarize penguin data
+df |>
+  group_by(species, sex) |>
   summarise(
     across(
       where(is.numeric),
       \(x) mean(x, na.rm = TRUE)
       )
-    ) %>%
+    ) |>
   knitr::kable()
 ```
 
 ## Penguin Size vs Mass by Species
 
 
-```{.r .cell-code}
-df %>%
+```{r}
+#| label: Plot penguins data
+df |>
   ggplot(aes(x = bill_length_mm, y = body_mass_g, color = species)) +
   geom_point() +
   geom_smooth(method = "lm")
