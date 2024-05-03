@@ -10,7 +10,7 @@ format:
         code-fold: true
 ---
 
-```{python}
+```{python}import duckdb
 #| label: imports
 from palmerpenguins import penguins
 from pandas import get_dummies
@@ -21,16 +21,19 @@ from sklearn import preprocessing
 
 ## Get Data
 
-
 ```{python}
 #| label: Load penguins data
-df = penguins.load_penguins().dropna()
+
+#df = penguins.load_penguins().dropna()
+
+con = duckdb.connect('my-db.duckdb')
+df = con.execute("SELECT * FROM penguins").fetchdf().dropna()
+con.close()
 
 df.head(3)
 ```
 
 ## Define Model and Fit
-
 
 ```{python}
 #| label: Build penguins model

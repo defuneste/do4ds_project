@@ -23,6 +23,26 @@ if (!require(dplyr) || !require(ggplot2) || !require(palmerpenguins)) {
 }
 
 df <- palmerpenguins::penguins
+
+# Get penguins data from DuckDB database
+con <- DBI::dbConnect(
+  duckdb::duckdb(),
+  dbdir = "my-db.duckdb"
+  )
+df <- dplyr::tbl(con, "penguins")
+```
+
+```{r}
+#| Get penguins data from DuckDB database
+
+#df <- palmerpenguins::penguins
+
+con <- DBI::dbConnect(
+  duckdb::duckdb(),
+  dbdir = "data/my-db.duckdb"
+  )
+df <- dplyr::tbl(con, "penguins")
+DBI::dbDisconnect(con)
 ```
 
 
