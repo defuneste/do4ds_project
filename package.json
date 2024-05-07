@@ -18,7 +18,9 @@
     "build": "quarto render",
     "clean": "rm -rf _site/*",
     "preview": "quarto preview",
+    "start": "npm run start:api & npm run start:app",
     "start:api": "venv/bin/python api.py",
+    "start:app": "Rscript app.R",
     "render:mermaid": "mmdc -i img/input.mmd -o img/output.svg",
     "mermaid": "mmdc"
   }

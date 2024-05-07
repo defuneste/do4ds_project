@@ -11,5 +11,6 @@ website:
     style: "docked"
     search: true
     contents:
-      - eda.qmd
-      - model.qmd
+      - 00_data.qmd
+      - 01_eda.qmd
+      - 02_model.qmd

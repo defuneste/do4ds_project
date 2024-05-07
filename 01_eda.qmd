@@ -22,41 +22,40 @@ if (!require(dplyr) || !require(ggplot2) || !require(palmerpenguins)) {
     library(palmerpenguins)
 }
 
-df <- palmerpenguins::penguins
-
-# Get penguins data from DuckDB database
-con <- DBI::dbConnect(
-  duckdb::duckdb(),
-  dbdir = "my-db.duckdb"
-  )
-df <- dplyr::tbl(con, "penguins")
 ```
 
 ```{r}
-#| Get penguins data from DuckDB database
+#| label: Get penguins data from DuckDB database
 
-#df <- palmerpenguins::penguins
+# df <- palmerpenguins::penguins
+
+library(duckdb)
 
 con <- DBI::dbConnect(
   duckdb::duckdb(),
   dbdir = "data/my-db.duckdb"
   )
 df <- dplyr::tbl(con, "penguins")
-DBI::dbDisconnect(con)
+# DBI::dbDisconnect(con)
 ```
 
 
 ```{r}
 #| label: Summarize penguin data
-df |>
-  group_by(species, sex) |>
-  summarise(
-    across(
-      where(is.numeric),
-      \(x) mean(x, na.rm = TRUE)
-      )
-    ) |>
-  knitr::kable()
+# df |>
+#   group_by(species, sex) |>
+#   summarise(
+#     across(
+#       where(is.numeric),
+#       \(x) mean(x, na.rm = TRUE)
+#     )
+#   ) |>
+#   knitr::kable()
+
+## Passing a predicate to tidy no longer works when using a duckdb table...
+## Error in summarise(group_by(df, species, sex), across(where(is.numeric), : ℹ In argument: `across(where(is.numeric), function(x) mean(x, na.rm = TRUE))`
+## Caused by error in `across()`:
+## ! This tidyselect interface doesn't support predicates.
 ```
 
 ## Penguin Size vs Mass by Species
@@ -70,3 +69,10 @@ df |>
   geom_smooth(method = "lm")
 ```
 
+Finally, close the duckdb connection *after* all operation on the data.frame are complete
+
+```{r}
+#| label: Close the duckdb connection
+
+DBI::dbDisconnect(con)
+```

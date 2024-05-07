@@ -56,10 +56,23 @@ server <- function(input, output) {
   # Fetch prediction from API
   pred <- eventReactive(
     input$predict,
-    httr2::request(api_url) |>
-      httr2::req_body_json(vals()) |>
-      httr2::req_perform() |>
-      httr2::resp_body_json(),
+    {
+      input_json_array <- jsonlite::toJSON(
+        list( # <- creates an array of objects
+          isolate(vals())
+        ),
+        auto_unbox=TRUE,
+        pretty = FALSE
+      )
+      message(paste0("Send prediction inputs (", input_json_array, ") to api (", api_url, ")"))
+      res <- httr2::request(api_url) |>
+        # httr2::req_body_json(val()) |>          # <- json auto serialization was not working...
+        httr2::req_body_raw(input_json_array) |>  # <- ... so we manualy serialized to json string
+        httr2::req_perform()
+
+      message("Return response")
+      httr2::resp_body_json(res)
+    },
     ignoreInit = TRUE
   )
 

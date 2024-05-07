@@ -12,7 +12,7 @@ format:
 
 ```{r}
 con <- DBI::dbConnect(duckdb::duckdb(), dbdir = "data/my-db.duckdb")
-DBI::dbWriteTable(con, "penguins", palmerpenguins::penguins)
+DBI::dbWriteTable(con, "penguins", palmerpenguins::penguins, overwrite=TRUE)
 DBI::dbDisconnect(con)
 ```
 
@@ -23,7 +23,7 @@ from palmerpenguins import penguins
 
 con = duckdb.connect('data/my-db.duckdb')
 df = penguins.load_penguins()
-con.execute('CREATE TABLE penguins AS SELECT * FROM df')
+con.execute('CREATE OR REPLACE TABLE penguins AS SELECT * FROM df')
 con.close()
 ```
 

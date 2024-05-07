@@ -1,5 +1,5 @@
 ---
-title: "Peguins Model"
+title: "Penguins Model"
 execute:
     echo: true
     output: true
@@ -10,13 +10,10 @@ format:
         code-fold: true
 ---
 
-```{python}import duckdb
-#| label: imports
-from palmerpenguins import penguins
+```{python}
+import duckdb
 from pandas import get_dummies
-import numpy as np
 from sklearn.linear_model import LinearRegression
-from sklearn import preprocessing
 ```
 
 ## Get Data
@@ -24,13 +21,14 @@ from sklearn import preprocessing
 ```{python}
 #| label: Load penguins data
 
-#df = penguins.load_penguins().dropna()
+# from palmerpenguins import penguins
+# df = penguins.load_penguins().dropna()
 
-con = duckdb.connect('my-db.duckdb')
+con = duckdb.connect('./data/my-db.duckdb')
 df = con.execute("SELECT * FROM penguins").fetchdf().dropna()
 con.close()
 
-df.head(3)
+df.head(30)
 ```
 
 ## Define Model and Fit
@@ -65,7 +63,7 @@ from vetiver import VetiverModel
 v = VetiverModel(model, model_name = "penguin_model")
 
 model_board = board_folder(
-  "data/model",
+  "./data/model",
   allow_pickle_read = True
 )
 vetiver_pin_write(model_board, v)
