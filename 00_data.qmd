@@ -10,13 +10,6 @@ format:
         code-fold: true
 ---
 
-```{r}
-con <- DBI::dbConnect(duckdb::duckdb(), dbdir = "data/my-db.duckdb")
-DBI::dbWriteTable(con, "penguins", palmerpenguins::penguins, overwrite=TRUE)
-DBI::dbDisconnect(con)
-```
-
-
 ```{python}
 import duckdb
 from palmerpenguins import penguins
@@ -25,5 +18,19 @@ con = duckdb.connect('data/my-db.duckdb')
 df = penguins.load_penguins()
 con.execute('CREATE OR REPLACE TABLE penguins AS SELECT * FROM df')
 con.close()
+```
+
+```{r}
+#| label: Write data to duckdb file
+con <- DBI::dbConnect(duckdb::duckdb(), dbdir = "data/my-db.duckdb")
+DBI::dbWriteTable(con, "penguins", palmerpenguins::penguins, overwrite=TRUE)
+```
+
+```{r}
+#| label: Write data to json file
+duckdb::dbSendQuery(con, "INSTALL json;")
+duckdb::dbSendQuery(con, "LOAD json;")
+duckdb::dbSendQuery(con, "COPY penguins TO './data/penguins.json' (ARRAY true);")
+DBI::dbDisconnect(con)
 ```
 
