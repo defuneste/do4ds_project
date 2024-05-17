@@ -28,8 +28,10 @@ exe_result = con.execute('CREATE OR REPLACE TABLE penguins AS SELECT * FROM df')
 
 ```{r}
 #| label: Write data to duckdb file
-con <- DBI::dbConnect(duckdb::duckdb(), dbdir = "data/my-db.duckdb")
-DBI::dbWriteTable(con, "penguins", palmerpenguins::penguins, overwrite=TRUE)
+if (!dir.exists("data")) dir.create("data")
+
+con <- DBI::dbConnect(duckdb::duckdb(), dbdir = "data/my-db.duckdb", shutdown = TRUE)
+DBI::dbWriteTable(con, "penguins", palmerpenguins::penguins, overwrite = TRUE)
 ```
 
 
@@ -44,7 +46,6 @@ duckdb::dbSendQuery(con, "COPY (SELECT * FROM penguins) TO './data/penguins.json
 ```
 
 ## Close the DuckDB connection(s)
-
 
 ```{python}
 cls_result = con.close()
