@@ -15,7 +15,8 @@
     "@mermaid-js/mermaid-cli": "^10.6.1"
   },
   "scripts": {
-    "build": "quarto render",
+    "build": "quarto render && npm run build:readme",
+    "build:readme": "quarto render README.qmd --to gfm --output README.md",
     "clean": "rm -rf _site/*",
     "preview": "quarto preview",
     "start": "npm run start:api & npm run start:app",
