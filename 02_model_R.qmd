@@ -1,0 +1,79 @@
+---
+title: "Penguins Model the R version"
+execute:
+    echo: true
+    output: true
+    message: false
+    warning: false
+format:
+    html:
+        code-fold: true
+---
+
+```{r}
+#| label: Load libs
+library(duckdb)
+```
+
+## Get Data
+
+```{r}
+#| label: Load penguins data
+
+connect_and_clean <- function(string_path) {
+  con <- DBI::dbConnect(duckdb::duckdb(string_path), shutdown = TRUE)
+  df_raw <- DBI::dbReadTable(con, "penguins")
+  df <- df_raw[complete.cases(df_raw), ]
+  DBI::dbDisconnect(con)
+  return(df)
+}
+
+df <-  connect_and_clean('./data/my-db.duckdb')
+
+head(df, n = 30)
+```
+
+## Define Model and Fit
+
+```{r}
+#| label: Build penguins model
+model <- lm(body_mass_g ~ bill_length_mm + species + sex, data = df)
+```
+
+## Get some information
+
+
+```{r}
+#| label: Print model results
+sprintf("R^2 %s", summary(model)$r.squared)
+sprintf("Intercept %s", coefficients(model)["(Intercept)"])
+coefficients(model)
+```
+
+
+testing a bit the nmodel: 
+
+```{r}
+new_values <- data.frame(bill_length_mm = 43,
+                         species = "Adelie", 
+                         sex = "male")
+
+predict(model, new_values)
+```
+
+## Write the model outside the bundle
+
+```{r}
+library("pins")
+library("vetiver")
+
+v <- vetiver::vetiver_model(model, model_name = "penguin_model")
+
+model_board <- pins::board_folder(
+  "./data/model")
+
+vetiver::vetiver_pin_write(model_board, v)
+```
+
+
+
