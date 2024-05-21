@@ -7,4 +7,4 @@ execute:
     warning: false
 ---
 
-A working project sample for our [MDA book study](https://github.com/ruralinnovation/mda_do4ds.git ).
+A working project sample for our [MDA book study](https://github.com/ruralinnovation/mda_do4ds.git).
