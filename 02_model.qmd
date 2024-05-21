@@ -60,7 +60,7 @@ from pins import board_folder
 from vetiver import vetiver_pin_write
 from vetiver import VetiverModel
 
-v = VetiverModel(model, model_name = "penguin_model")
+v = VetiverModel(model, model_name="penguin_model", prototype_data=X)
 
 model_board = board_folder(
   "./data/model",
@@ -70,4 +70,27 @@ vetiver_pin_write(model_board, v)
 ```
 
 
+## Deploy and run the API
 
+This code should only be run interactively (it's not rendered by `quarto preview`):
+
+```{python}
+#| eval: false
+from pins import board_folder
+from vetiver import VetiverModel
+from vetiver import VetiverAPI
+
+# This is how you would reload the model from disk...
+b = board_folder('data/model', allow_pickle_read=True)
+v = VetiverModel.from_pin(b, 'penguin_model')
+
+# ... however VertiverAPI also uses the model inputs to define params from the prototype
+v = VetiverModel(model, model_name="penguin_model", prototype_data=X)
+
+app = VetiverAPI(v, check_prototype=True)
+app.run(port=8000)
+```
+
+
+Alternatively, save it to a file called `api.py` and then run it with:
+`venv/bin/python api.py`
