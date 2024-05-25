@@ -18,6 +18,8 @@ from sklearn.linear_model import LinearRegression
 
 ## Get Data
 
+This code snippet connects to a DuckDB database file, retrieves data from a table named "penguins", drops rows with missing values, and then closes the connection.
+
 ```{python}
 #| label: Load penguins data
 
