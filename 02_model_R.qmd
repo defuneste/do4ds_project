@@ -69,10 +69,21 @@ library("vetiver")
 
 v <- vetiver::vetiver_model(model, model_name = "penguin_model")
 
-model_board <- pins::board_folder(
-  "./data/model")
+## I'm commenting out the followng code:
+# model_board <- pins::board_folder(
+#   "./data/model")
+#
+# vetiver::vetiver_pin_write(model_board, v)
+## ... because pins::board writes in RDS format and cannot be loaded into the python api:
+## 2024-05-31 08:47:04,916 - API Started
+## Traceback (most recent call last):
+##   File "/Users/johnhall/Documents/CORI/coriverse/modules/devops_for_data_science/do4ds_project/api.py", line 21, in <module>
+##     v = VetiverModel.from_pin(b, 'penguin_model')
+##         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+## NotImplementedError: No driver for type rds
 
-vetiver::vetiver_pin_write(model_board, v)
+# TODO: Lets implement pins for S3 both here and in the python API
+
 ```
 
 
