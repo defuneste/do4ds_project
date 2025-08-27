@@ -24,3 +24,9 @@ useful commands:
 
 - `uv sync`
 - `source .venv/bin/activate`
+
+Notes Olivier: 
+
+I had some issues `pkg_resources`, it was imported by palmerpenguins and was not present in `requirements.txt`. It seems to be part of setuptools that may or not be install at the system layer (who knows!) and is a "deprecated as an API". Updating some package help but their reverse dependencies were requiring a more recent Python version or pinpointing the last version of said packages with the specific version. 
+
+Since palmerpenguins is just a table, I will use the R version to shortcut that..  
