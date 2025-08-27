@@ -7,5 +7,6 @@ _site/
 /data/
 /node_modules/
 /venv/
+/renv/
 
 /.quarto/
