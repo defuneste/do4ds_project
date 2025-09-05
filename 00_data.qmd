@@ -14,7 +14,7 @@ format:
 
 ### Python Version
 
-Note: It seems quarto is using reticulate. I do not want to check how quarto is handling uv/venv so the next cell will not be evaluated. 
+Note: It seems quarto is using reticulate. I do not want to check how quarto is handling uv/venv so the next cell will not be evaluated. See also the note in the README.md, I just used the R version
 
 
 ```{python}
@@ -25,21 +25,29 @@ from palmerpenguins import penguins
 con = duckdb.connect('data/my-db.duckdb')
 df = penguins.load_penguins()
 df.head()
-
 # Assign operations to variables just to keep from printing results on website
 exe_result = con.execute('CREATE OR REPLACE TABLE penguins AS SELECT * FROM df')
+cls_result = con.close()
 ```
-
-
 
 ### same thing in `R`:
 
 ```{r}
 #| label: Write data to duckdb file
-if (!dir.exists("data")) dir.create("data")
 
-con <- DBI::dbConnect(duckdb::duckdb(), dbdir = "data/my-db.duckdb", shutdown = TRUE)
-DBI::dbWriteTable(con, "penguins", palmerpenguins::penguins, overwrite = TRUE)
+setup_penguin_db <- function(){
+    if (!dir.exists("data")) dir.create("data")
+    message("Creating data/ directory")
+    message("DBI and duckdb are used")
+    on.exit(DBI::dbDisconnect(con))
+    con <- DBI::dbConnect(duckdb::duckdb(), dbdir = "data/my-db.duckdb", shutdown = TRUE)
+    DBI::dbWriteTable(con, "penguins", palmerpenguins::penguins, overwrite = TRUE)
+    message("Writing data/my-db.duckdb")
+} 
+
+setup_penguin_db()
+grepl("my-db.duckdb", list.files("data/"))
+
 ```
 
 
@@ -48,18 +56,7 @@ DBI::dbWriteTable(con, "penguins", palmerpenguins::penguins, overwrite = TRUE)
 
 ```{r}
 #| label: Write data to json file
-duckdb::dbSendQuery(con, "INSTALL json;")
-duckdb::dbSendQuery(con, "LOAD json;")
-duckdb::dbSendQuery(con, "COPY (SELECT * FROM penguins) TO './data/penguins.json' (ARRAY true);")
+# duckdb::dbSendQuery(con, "INSTALL json;")
+# duckdb::dbSendQuery(con, "LOAD json;")
+# duckdb::dbSendQuery(con, "COPY (SELECT * FROM penguins) TO './data/penguins.json' (ARRAY true);")
 ```
-
-## Close the DuckDB connection(s)
-
-```{python}
-cls_result = con.close()
-```
-
-```{r}
-DBI::dbDisconnect(con)
-```
-
