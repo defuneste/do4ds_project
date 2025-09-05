@@ -10,56 +10,52 @@ format:
         code-fold: true
 ---
 
-## Penguin Size and Mass by Sex and Species
+# R workflow
 
-
-```{r}
-#| label: Import packages and penguins data
-if (!require(dplyr) || !require(ggplot2) || !require(palmerpenguins)) {
-    install.packages(c("dplyr", "ggplot2", "palmerpenguins"))
-    library(dplyr)
-    library(ggplot2)
-    library(palmerpenguins)
-}
-
-```
+Remember we are using `renv`!   
 
 ```{r}
 #| label: Get penguins data from DuckDB database
 
-# df <- palmerpenguins::penguins
+get_penguins_table <- function() {
+  # I admit it is a bit ridicule to load a single DB from a DB
+  if ( ! file.exists("data/my-db.duckdb")) {
+    stop("Please check 00_eda.qmd to generate the my-db.duckdb")
+  } else {
+    con <- DBI::dbConnect(
+    duckdb::duckdb(),
+    dbdir = "data/my-db.duckdb")
+    on.exit(DBI::dbDisconnect(con), add = TRUE)
+    df <- DBI::dbReadTable(con, "penguins")
+    return(df)
+  }
+} 
 
-library(duckdb)
+df <- get_penguins_table() |> 
+          tibble:: as_tibble()
 
-con <- DBI::dbConnect(
-  duckdb::duckdb(),
-  dbdir = "data/my-db.duckdb"
-  )
-df <- dplyr::tbl(con, "penguins")
-# DBI::dbDisconnect(con)
 ```
 
+
+## A First table: 
 
 ```{r}
 #| label: Summarize penguin data
-# df |>
-#   group_by(species, sex) |>
-#   summarise(
-#     across(
-#       where(is.numeric),
-#       \(x) mean(x, na.rm = TRUE)
-#     )
-#   ) |>
-#   knitr::kable()
 
-## Passing a predicate to tidy no longer works when using a duckdb table...
-## Error in summarise(group_by(df, species, sex), across(where(is.numeric), : ℹ In argument: `across(where(is.numeric), function(x) mean(x, na.rm = TRUE))`
-## Caused by error in `across()`:
-## ! This tidyselect interface doesn't support predicates.
+library(dplyr); library(ggplot2) 
+df |>
+   group_by(species, sex) |>
+   summarize(
+     across(
+       where(is.numeric),
+       \(x) mean(x, na.rm = TRUE)
+     )
+   ) |>
+   knitr::kable()
+
 ```
 
 ## Penguin Size vs Mass by Species
-
 
 ```{r}
 #| label: Plot penguins data
@@ -69,10 +65,6 @@ df |>
   geom_smooth(method = "lm")
 ```
 
-Finally, close the duckdb connection *after* all operation on the data.frame are complete
+# Python Workflow 
 
-```{r}
-#| label: Close the duckdb connection
-
-DBI::dbDisconnect(con)
-```
+TODO

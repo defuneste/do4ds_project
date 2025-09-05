@@ -52,13 +52,12 @@ setup_penguin_db <- function(){
 } 
 
 setup_penguin_db()
-grepl("my-db.duckdb", list.files("data/"))
-
 ```
 
 
-## Write data to JSON with DuckDB
+Is the process correctly setup: `grepl("my-db.duckdb", list.files("data/"))
 
+## Write data to JSON with DuckDB
 
 ```{r}
 #| label: Write data to json file
