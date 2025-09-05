@@ -30,18 +30,24 @@ exe_result = con.execute('CREATE OR REPLACE TABLE penguins AS SELECT * FROM df')
 cls_result = con.close()
 ```
 
-### same thing in `R`:
+### Same thing in `R`:
 
 ```{r}
 #| label: Write data to duckdb file
 
+# penguins data is in R 4.5 but you could be in older version 
 setup_penguin_db <- function(){
     if (!dir.exists("data")) dir.create("data")
     message("Creating data/ directory")
     message("DBI and duckdb are used")
-    on.exit(DBI::dbDisconnect(con))
-    con <- DBI::dbConnect(duckdb::duckdb(), dbdir = "data/my-db.duckdb", shutdown = TRUE)
-    DBI::dbWriteTable(con, "penguins", palmerpenguins::penguins, overwrite = TRUE)
+    on.exit(DBI::dbDisconnect(con), add = TRUE)
+    con <- DBI::dbConnect(duckdb::duckdb(), 
+                          dbdir = "data/my-db.duckdb", 
+                          shutdown = TRUE)
+    DBI::dbWriteTable(con, 
+                     "penguins", 
+                     palmerpenguins::penguins, 
+                     overwrite = TRUE)
     message("Writing data/my-db.duckdb")
 } 
 
