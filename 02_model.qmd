@@ -11,6 +11,7 @@ format:
 ---
 
 ```{python}
+#| label: Import modules
 import duckdb
 from pandas import get_dummies
 from sklearn.linear_model import LinearRegression
@@ -22,13 +23,7 @@ This code snippet connects to a DuckDB database file, retrieves data from a tabl
 
 ```{python}
 #| label: Load penguins data
-
-# from palmerpenguins import penguins
-# df = penguins.load_penguins().dropna()
-
-con = duckdb.connect('./data/my-db.duckdb')
-df = con.execute("SELECT * FROM penguins").fetchdf().dropna()
-con.close()
+df = duckdb.read_parquet('data/penguins.parquet').fetchdf().dropna()
 
 df.head(30)
 ```

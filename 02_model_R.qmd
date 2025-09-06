@@ -24,7 +24,7 @@ connect_and_clean <- function(string_path) {
   con <- DBI::dbConnect(duckdb::duckdb(string_path), shutdown = TRUE)
   df_raw <- DBI::dbReadTable(con, "penguins")
   df <- df_raw[complete.cases(df_raw), ]
-  DBI::dbDisconnect(con)
+  on.exit(DBI::dbDisconnect(con)) 
   return(df)
 }
 

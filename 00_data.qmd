@@ -49,6 +49,13 @@ setup_penguin_db <- function(){
                      palmerpenguins::penguins, 
                      overwrite = TRUE)
     message("Writing data/my-db.duckdb")
+    # pissed he just write parquet 
+    DBI::dbExecute(con, "COPY
+                            (select * from penguins)
+                        TO 'data/penguins.parquet'
+                        (FORMAT parquet);")
+    message("Writing data/penguins.parquet")
+
 } 
 
 setup_penguin_db()
